@@ -4,8 +4,10 @@ import static org.junit.Assert.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -20,7 +22,11 @@ import tourGuide.user.User;
 import tourGuide.user.UserReward;
 
 public class TestRewardsService {
+	@Before
+	public void setUp() throws Exception {
 
+		Locale.setDefault(Locale.US);
+	}
 	@Test
 	public void userGetRewards() {
 		GpsUtil gpsUtil = new GpsUtil();
