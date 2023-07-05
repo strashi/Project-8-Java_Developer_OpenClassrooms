@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -35,9 +38,7 @@ public class TourGuideService {
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
-
-	public int numberOfUser = 0;
-	public VisitedLocation resultat;
+	public final ExecutorService executorService;
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
@@ -50,6 +51,7 @@ public class TourGuideService {
 			logger.debug("Finished initializing users");
 		}
 		tracker = new Tracker(this);
+		executorService = Executors.newFixedThreadPool(600);
 		addShutDownHook();
 	}
 	
@@ -88,28 +90,12 @@ public class TourGuideService {
 
 
 	public VisitedLocation trackUserLocation(User user) {
-		if (numberOfUser % 10 == 0) {
-			numberOfUser++;
-			Thread thread = new Thread() {
-				public void run() {
-					VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-					user.addToVisitedLocations(visitedLocation);
-					rewardsService.calculateRewards(user);
-					//System.out.println("thread créé");
-					resultat = visitedLocation;
-				}
-			};
-			thread.start();
-			//numberOfUser --;
-			return resultat;
-		}else{
-				numberOfUser++;
-				VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-				user.addToVisitedLocations(visitedLocation);
-				rewardsService.calculateRewards(user);
-				//numberOfUser --;
-				return resultat;
-		}
+		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+		executorService.submit(() -> {
+			user.addToVisitedLocations(visitedLocation);
+			rewardsService.calculateRewards(user);
+		});
+		return visitedLocation;
 }
 
 

@@ -37,6 +37,7 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
+
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
 		
