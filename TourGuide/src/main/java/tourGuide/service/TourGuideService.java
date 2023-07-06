@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -51,7 +51,7 @@ public class TourGuideService {
 			logger.debug("Finished initializing users");
 		}
 		tracker = new Tracker(this);
-		executorService = Executors.newFixedThreadPool(600);
+		executorService = Executors.newFixedThreadPool(10);
 		addShutDownHook();
 	}
 	
@@ -60,10 +60,15 @@ public class TourGuideService {
 	}
 	
 	public VisitedLocation getUserLocation(User user) {
-		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ?
-			user.getLastVisitedLocation() :
-			trackUserLocation(user);
-		return visitedLocation;
+		try {
+			VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ?
+					user.getLastVisitedLocation() :
+					trackUserLocation(user).get();
+			return visitedLocation;
+		}catch (InterruptedException | ExecutionException e){
+			throw new RuntimeException(e);
+		}
+
 	}
 	
 	public User getUser(String userName) {
@@ -89,14 +94,16 @@ public class TourGuideService {
 	}
 
 
-	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-		executorService.submit(() -> {
+	public Future<VisitedLocation> trackUserLocation(User user) {
+
+		return executorService.submit(()->{
+			VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 			user.addToVisitedLocations(visitedLocation);
 			rewardsService.calculateRewards(user);
+			return visitedLocation;
 		});
-		return visitedLocation;
-}
+
+	}
 
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
