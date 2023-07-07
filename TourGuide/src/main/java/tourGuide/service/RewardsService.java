@@ -56,7 +56,7 @@ public class RewardsService {
 				}
 			}
 		}
-		//executorService = Executors.newCachedThreadPool();
+		executorService = Executors.newCachedThreadPool();
 		try {
 			List<Future<UserReward>> rewardFutures = executorService.invokeAll(tasks);
 			for (Future<UserReward> future : rewardFutures) {

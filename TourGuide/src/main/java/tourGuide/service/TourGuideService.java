@@ -94,14 +94,23 @@ public class TourGuideService {
 	}
 
 
-	public Future<VisitedLocation> trackUserLocation(User user) {
+	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
 
-		return executorService.submit(()->{
+		//essai avec CompletableFuture<VisistedLocation> en retour de la méthode
+		return CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executorService)
+				.thenApply(visitedLocation -> {
+					user.addToVisitedLocations(visitedLocation);
+					rewardsService.calculateRewards(user);
+					return visitedLocation;
+				});
+
+		//essai avec Future<VisistedLocation> en retour de la méthode
+		/*return executorService.submit(()->{
 			VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 			user.addToVisitedLocations(visitedLocation);
 			rewardsService.calculateRewards(user);
 			return visitedLocation;
-		});
+		});*/
 
 	}
 
