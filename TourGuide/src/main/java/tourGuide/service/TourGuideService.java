@@ -2,13 +2,7 @@ package tourGuide.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -51,7 +45,7 @@ public class TourGuideService {
 			logger.debug("Finished initializing users");
 		}
 		tracker = new Tracker(this);
-		executorService = Executors.newFixedThreadPool(10);
+		executorService = Executors.newFixedThreadPool(1);
 		addShutDownHook();
 	}
 	
@@ -60,15 +54,10 @@ public class TourGuideService {
 	}
 	
 	public VisitedLocation getUserLocation(User user) {
-		try {
-			VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ?
+		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ?
 					user.getLastVisitedLocation() :
-					trackUserLocation(user).get();
-			return visitedLocation;
-		}catch (InterruptedException | ExecutionException e){
-			throw new RuntimeException(e);
-		}
-
+					trackUserLocation(user);
+		return visitedLocation;
 	}
 	
 	public User getUser(String userName) {
@@ -94,26 +83,14 @@ public class TourGuideService {
 	}
 
 
-	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
-
-		//essai avec CompletableFuture<VisistedLocation> en retour de la méthode
-		return CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executorService)
-				.thenApply(visitedLocation -> {
-					user.addToVisitedLocations(visitedLocation);
-					rewardsService.calculateRewards(user);
-					return visitedLocation;
-				});
-
-		//essai avec Future<VisistedLocation> en retour de la méthode
-		/*return executorService.submit(()->{
-			VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+	public VisitedLocation trackUserLocation(User user) {
+		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+		executorService.submit(()->{
 			user.addToVisitedLocations(visitedLocation);
 			rewardsService.calculateRewards(user);
-			return visitedLocation;
-		});*/
-
+		});
+		return visitedLocation;
 	}
-
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();

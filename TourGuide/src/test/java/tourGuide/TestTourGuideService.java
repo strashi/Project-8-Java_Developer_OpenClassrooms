@@ -93,7 +93,7 @@ public class TestTourGuideService {
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user).get();
+		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
 		
 		tourGuideService.tracker.stopTracking();
 		
@@ -109,7 +109,7 @@ public class TestTourGuideService {
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user).get();
+		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
 		
 		List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation);
 		
