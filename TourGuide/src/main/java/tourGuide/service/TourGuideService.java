@@ -36,6 +36,7 @@ public class TourGuideService {
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
+		Locale.setDefault(Locale.US); // needed for GpsUtil to function
 		this.rewardsService = rewardsService;
 		
 		if(testMode) {
@@ -45,7 +46,7 @@ public class TourGuideService {
 			logger.debug("Finished initializing users");
 		}
 		tracker = new Tracker(this);
-		executorService = Executors.newFixedThreadPool(1);
+		executorService = Executors.newFixedThreadPool(600);
 		addShutDownHook();
 	}
 	

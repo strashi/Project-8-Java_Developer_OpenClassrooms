@@ -24,13 +24,10 @@ public class RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
-	public ExecutorService executorService;
-
 
 	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 		this.gpsUtil = gpsUtil;
 		this.rewardsCentral = rewardCentral;
-		executorService = Executors.newCachedThreadPool();
 	}
 	
 	public void setProximityBuffer(int proximityBuffer) {
@@ -42,44 +39,18 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
-		//Soluce Stéphane
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
 
-		List<Callable<UserReward>> tasks = new ArrayList<>();
-
-		for (Attraction attraction : attractions) {
-			for (VisitedLocation visitedLocation : userLocations) {
-				if (nearAttraction(visitedLocation, attraction)) {
-					tasks.add(() ->  new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
-					break; // no need to loop through the rest of locations if the user was found to be near already
-				}
-			}
-		}
-		executorService = Executors.newCachedThreadPool();
-		try {
-			List<Future<UserReward>> rewardFutures = executorService.invokeAll(tasks);
-			for (Future<UserReward> future : rewardFutures) {
-				user.addUserReward(future.get()); // this setter filters out duplicated rewards
-			}
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		} finally {
-			executorService.shutdown();
-		}
-		//Code fourni
-		/*List<VisitedLocation> userLocations = user.getVisitedLocations();
-		List<Attraction> attractions = gpsUtil.getAttractions();
-
-		for(Attraction attraction : attractions)  {
-			for(VisitedLocation visitedLocation : userLocations){
-				//if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
+		for(VisitedLocation visitedLocation : userLocations) {
+			for(Attraction attraction : attractions) {
+				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
 					if(nearAttraction(visitedLocation, attraction)) {
 						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 					}
-				//}
+				}
 			}
-		}*/
+		}
 
 	}
 	
