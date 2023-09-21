@@ -39,7 +39,7 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
-		List<VisitedLocation> userLocations = user.getVisitedLocations();
+		/*List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
 
 		for(VisitedLocation visitedLocation : userLocations) {
@@ -50,6 +50,31 @@ public class RewardsService {
 					}
 				}
 			}
+		}*/
+		List<VisitedLocation> userLocations = user.getVisitedLocations();
+		List<Attraction> attractions = gpsUtil.getAttractions();
+
+		List<Callable<UserReward>> tasks = new ArrayList<>();
+
+		for (Attraction attraction : attractions) {
+			for (VisitedLocation visitedLocation : userLocations) {
+				if (nearAttraction(visitedLocation, attraction)) {
+					tasks.add(() ->  new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+					break; // no need to loop through the rest of locations if the user was found to be near already
+				}
+			}
+		}
+
+		ExecutorService executorService = Executors.newCachedThreadPool();
+		try {
+			List<Future<UserReward>> rewardFutures = executorService.invokeAll(tasks);
+			for (Future<UserReward> future : rewardFutures) {
+				user.addUserReward(future.get()); // this setter filters out duplicated rewards
+			}
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		} finally {
+			executorService.shutdown();
 		}
 
 	}

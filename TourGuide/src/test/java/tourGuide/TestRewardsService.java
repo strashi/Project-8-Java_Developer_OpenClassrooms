@@ -22,12 +22,8 @@ import tourGuide.user.User;
 import tourGuide.user.UserReward;
 
 public class TestRewardsService {
-	@Before
-	public void setUp() throws Exception {
 
-		Locale.setDefault(Locale.US);
-	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void userGetRewards() {
 		GpsUtil gpsUtil = new GpsUtil();
@@ -41,8 +37,11 @@ public class TestRewardsService {
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 		tourGuideService.trackUserLocation(user);
 		List<UserReward> userRewards = user.getUserRewards();
-		tourGuideService.tracker.stopTracking();
+		//tourGuideService.tracker.stopTracking();
+		tourGuideService.stopTrackingUsersAndCompleteTasks();
+		System.out.println(userRewards.size());
 		assertTrue(userRewards.size() == 1);
+
 
 	}
 	
@@ -54,7 +53,7 @@ public class TestRewardsService {
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
 	}
 	
-	@Ignore // Needs fixed - can throw ConcurrentModificationException
+	//@Ignore // Needs fixed - can throw ConcurrentModificationException
 	@Test
 	public void nearAllAttractions() {
 		GpsUtil gpsUtil = new GpsUtil();
@@ -66,7 +65,8 @@ public class TestRewardsService {
 		
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
-		tourGuideService.tracker.stopTracking();
+		//tourGuideService.tracker.stopTracking();
+		tourGuideService.stopTrackingUsersAndCompleteTasks();
 
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
 	}

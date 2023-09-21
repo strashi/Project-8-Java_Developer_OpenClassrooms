@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.TaskExecutor;
@@ -79,8 +80,16 @@ public class TourGuideService {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(), 
 				user.getUserPreferences().getNumberOfChildren(), user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
-		user.setTripDeals(providers);
-		return providers;
+		List<Provider> response = new ArrayList<>();
+		for (Provider provider : providers){
+			Money price = Money.of(provider.price,"USD");
+			Money maxPrice = user.getUserPreferences().getHighPricePoint();
+			Money minPrice = user.getUserPreferences().getLowerPricePoint();
+			if(price.isGreaterThanOrEqualTo(minPrice) && price.isLessThanOrEqualTo(maxPrice))
+				response.add(provider);
+		}
+		user.setTripDeals(response);
+		return response;
 	}
 
 
@@ -111,7 +120,26 @@ public class TourGuideService {
 		      } 
 		    }); 
 	}
-	
+
+	/*****************************************************************
+	 * When shutting down, ensure that all calculations are complete
+	 *****************************************************************/
+
+	public void stopTrackingUsersAndCompleteTasks() {
+		tracker.stopTracking();
+		logger.debug("Tracker stopped. Completing tasks . . .");
+		executorService.shutdown();
+		int minutes = 0;
+		while (true) {
+			try {
+				if (executorService.awaitTermination(1, TimeUnit.MINUTES)) break;
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+			logger.debug("Completing tasks . . . (elapsed {} minutes)", ++minutes);
+		}
+	}
+
 	/**********************************************************************************
 	 * 
 	 * Methods Below: For Internal Testing
