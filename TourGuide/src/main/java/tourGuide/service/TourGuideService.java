@@ -18,6 +18,7 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import tourGuide.dto.NearByAttractionDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
@@ -101,16 +102,38 @@ public class TourGuideService {
 		});
 		return visitedLocation;
 	}
+	//  TODO: Change this method to no longer return a List of Attractions.
+	//  Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
+	//  Return a new JSON object that contains:
+	// Name of Tourist attraction,
+	// Tourist attractions lat/long,
+	// The user's location lat/long,
+	// The distance in miles between the user's location and each of the attractions.
+	// The reward points for visiting each Attraction.
+	//    Note: Attraction reward points can be gathered from RewardsCentral
+	public List<NearByAttractionDTO> getNearByAttractions(String userName) {
 
-	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		List<Attraction> nearbyAttractions = new ArrayList<>();
+		//List<NearByAttractionDTO> nearbyAttractions = new ArrayList<>();
+		Set<NearByAttractionDTO> nearbyAttractions = new TreeSet<>();
+		VisitedLocation visitedLocation = this.getUserLocation(this.getUser(userName));
+		Location userLocation = visitedLocation.location;
+
 		for(Attraction attraction : gpsUtil.getAttractions()) {
-			if(rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
-				nearbyAttractions.add(attraction);
-			}
+			Location attractionLocation = new Location(attraction.latitude,attraction.longitude);
+			double distance = rewardsService.getDistance(userLocation,attractionLocation);
+			int rewardPoints = rewardsService.getRewardPoints(attraction,this.getUser(userName));
+			NearByAttractionDTO nearByAttractionDTO = new NearByAttractionDTO(attraction,userLocation,distance, rewardPoints);
+			nearbyAttractions.add(nearByAttractionDTO);
+		}
+
+		List<NearByAttractionDTO> response = new ArrayList<>();
+		for(int i =0; i<5;i++){
+			NearByAttractionDTO result = nearbyAttractions.stream().findFirst().get();
+			response.add(result);
+			nearbyAttractions.remove(result);
 		}
 		
-		return nearbyAttractions;
+		return response;
 	}
 	
 	private void addShutDownHook() {
