@@ -14,7 +14,9 @@ import org.junit.Test;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
+import org.springframework.boot.test.context.SpringBootTest;
 import rewardCentral.RewardCentral;
+import tourGuide.dto.NearByAttractionDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -22,11 +24,7 @@ import tourGuide.user.User;
 import tripPricer.Provider;
 
 public class TestTourGuideService {
-/*	@Before
-	public void setUp() throws Exception {
 
-		Locale.setDefault(Locale.US);
-	}*/
 	@Test
 	public void getUserLocation() {
 		GpsUtil gpsUtil = new GpsUtil();
@@ -100,7 +98,7 @@ public class TestTourGuideService {
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
 	
-	@Ignore // Not yet implemented
+	//@Ignore // Not yet implemented
 	@Test
 	public void getNearbyAttractions() throws Exception{
 		GpsUtil gpsUtil = new GpsUtil();
@@ -110,10 +108,13 @@ public class TestTourGuideService {
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
+		user.addToVisitedLocations(visitedLocation);
+		tourGuideService.addUser(user);
 		
-		List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation);
+		List<NearByAttractionDTO> attractions = tourGuideService.getNearByAttractions(user.getUserName());
 		
 		tourGuideService.tracker.stopTracking();
+		//tourGuideService.stopTrackingUsersAndCompleteTasks();
 		
 		assertEquals(5, attractions.size());
 	}

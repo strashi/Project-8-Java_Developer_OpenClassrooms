@@ -12,6 +12,7 @@ import com.jsoniter.output.JsonStream;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
+import tourGuide.user.UserReward;
 import tripPricer.Provider;
 
 @RestController
@@ -42,13 +43,14 @@ public class TourGuideController {
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @RequestMapping("/getNearbyAttractions") 
     public String getNearbyAttractions(@RequestParam String userName) {
-    	//VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
     	return JsonStream.serialize(tourGuideService.getNearByAttractions(userName));
     }
     
     @RequestMapping("/getRewards") 
     public String getRewards(@RequestParam String userName) {
-    	return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
+    	//return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
+        List<UserReward> userRewards = tourGuideService.getUserRewards(getUser(userName));
+        return JsonStream.serialize(userRewards);
     }
     
     @RequestMapping("/getAllCurrentLocations")
@@ -75,6 +77,14 @@ public class TourGuideController {
     private User getUser(String userName) {
     	return tourGuideService.getUser(userName);
     }
-   
+
+    //#################################################################
+
+    @RequestMapping("/veuxvoir")
+    public String veuxvoir(@RequestParam String userName){
+        List<VisitedLocation> visitedLocations = tourGuideService.getVisitedLocation(userName);
+        return JsonStream.serialize(visitedLocations);
+    }
+
 
 }

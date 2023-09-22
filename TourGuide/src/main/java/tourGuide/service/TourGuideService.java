@@ -26,6 +26,8 @@ import tourGuide.user.UserReward;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
+import static tourGuide.TourGuideModule.testMode;
+
 @Service
 public class TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
@@ -33,7 +35,7 @@ public class TourGuideService {
 	private final RewardsService rewardsService;
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
-	boolean testMode = true;
+
 	public final ExecutorService executorService;
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
@@ -53,6 +55,8 @@ public class TourGuideService {
 	}
 	
 	public List<UserReward> getUserRewards(User user) {
+		rewardsService.calculateRewards(user);
+		//trackUserLocation(user);
 		return user.getUserRewards();
 	}
 	
@@ -69,6 +73,7 @@ public class TourGuideService {
 	
 	public List<User> getAllUsers() {
 		return internalUserMap.values().stream().collect(Collectors.toList());
+		//return new ArrayList<>(internalUserMap.values());
 	}
 	
 	public void addUser(User user) {
@@ -115,8 +120,7 @@ public class TourGuideService {
 
 		//List<NearByAttractionDTO> nearbyAttractions = new ArrayList<>();
 		Set<NearByAttractionDTO> nearbyAttractions = new TreeSet<>();
-		VisitedLocation visitedLocation = this.getUserLocation(this.getUser(userName));
-		Location userLocation = visitedLocation.location;
+		Location userLocation = getUserLocation(getUser(userName)).location;
 
 		for(Attraction attraction : gpsUtil.getAttractions()) {
 			Location attractionLocation = new Location(attraction.latitude,attraction.longitude);
@@ -178,12 +182,12 @@ public class TourGuideService {
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			generateUserLocationHistory(user);
-			
+			rewardsService.calculateRewards(user);
 			internalUserMap.put(userName, user);
 		});
 		logger.debug("Created " + InternalTestHelper.getInternalUserNumber() + " internal test users.");
 	}
-	
+
 	private void generateUserLocationHistory(User user) {
 		IntStream.range(0, 3).forEach(i-> {
 			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));
@@ -206,5 +210,11 @@ public class TourGuideService {
 		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));
 	    return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 	}
-	
+
+	//#################################################################
+
+	public List<VisitedLocation> getVisitedLocation(String userName) {
+		User user = getUser(userName);
+		return user.getVisitedLocations();
+	}
 }
