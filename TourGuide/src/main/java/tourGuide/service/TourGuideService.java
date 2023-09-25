@@ -7,11 +7,9 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -23,6 +21,7 @@ import tourGuide.dto.NearByAttractionDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
+import tourGuide.user.UserPreferences;
 import tourGuide.user.UserReward;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
@@ -108,15 +107,7 @@ public class TourGuideService {
 		});
 		return visitedLocation;
 	}
-	//  TODO: Change this method to no longer return a List of Attractions.
-	//  Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
-	//  Return a new JSON object that contains:
-	// Name of Tourist attraction,
-	// Tourist attractions lat/long,
-	// The user's location lat/long,
-	// The distance in miles between the user's location and each of the attractions.
-	// The reward points for visiting each Attraction.
-	//    Note: Attraction reward points can be gathered from RewardsCentral
+
 	public List<NearByAttractionDTO> getNearByAttractions(String userName) {
 
 		//List<NearByAttractionDTO> nearbyAttractions = new ArrayList<>();
@@ -182,9 +173,13 @@ public class TourGuideService {
 			String phone = "000";
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
+			user.setUserPreferences(new UserPreferences());
 			generateUserLocationHistory(user);
-			rewardsService.calculateRewards(user);
+
+			//generateUserAttractionLocationHistory(user);
+			//rewardsService.calculateRewards(user);
 			internalUserMap.put(userName, user);
+
 		});
 		logger.debug("Created " + InternalTestHelper.getInternalUserNumber() + " internal test users.");
 	}
@@ -214,6 +209,21 @@ public class TourGuideService {
 
 	//#################################################################
 
+	private Attraction generateRandomAttraction(){
+		List<Attraction> attractionList = gpsUtil.getAttractions();
+		/*int max = 25;
+		int intAttraction = (int)(Math.random()*(max+1));*/
+		int leftLimit = 0;
+		int rightLimit = 25;
+		int intAttraction =  (int)(new Random().nextDouble() * (25+1));
+		return attractionList.get(intAttraction);
+	}
+	private void generateUserAttractionLocationHistory(User user) {
+			Attraction attraction = generateRandomAttraction();
+			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), new Location((attraction.latitude), (attraction.longitude)), getRandomTime()));
+
+
+	}
 	public List<VisitedLocation> getVisitedLocation(String userName) {
 		User user = getUser(userName);
 		return user.getVisitedLocations();
@@ -227,5 +237,22 @@ public class TourGuideService {
 			currentLocationDTOsList.add(currentLocationDTO);
 		}
 		return currentLocationDTOsList;
+	}
+
+	public UserPreferences getUserPreferences(String userName) {
+		User user = getUser(userName);
+		UserPreferences userPreferences = user.getUserPreferences();
+
+		return userPreferences;
+	}
+
+	public void setUserPreferences(User user, int adults, int children, int nightsStay, double minPrice, double maxPrice) {
+		UserPreferences preferences = user.getUserPreferences();
+		preferences.setNumberOfAdults(adults);
+		preferences.setNumberOfChildren(children);
+		preferences.setTripDuration(nightsStay);
+		preferences.setLowerPricePoint(Money.of(minPrice, "USD"));
+		preferences.setHighPricePoint(Money.of(maxPrice, "USD"));
+		user.setUserPreferences(preferences);
 	}
 }

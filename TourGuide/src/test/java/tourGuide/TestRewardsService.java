@@ -39,7 +39,6 @@ public class TestRewardsService {
 		List<UserReward> userRewards = user.getUserRewards();
 
 		tourGuideService.stopTrackingUsersAndCompleteTasks();
-
 		assertTrue(userRewards.size() == 1);
 
 
