@@ -18,6 +18,7 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import tourGuide.dto.CurrentLocationDTO;
 import tourGuide.dto.NearByAttractionDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
@@ -216,5 +217,15 @@ public class TourGuideService {
 	public List<VisitedLocation> getVisitedLocation(String userName) {
 		User user = getUser(userName);
 		return user.getVisitedLocations();
+	}
+
+	public List<CurrentLocationDTO> getCurrentLocations() {
+		List<CurrentLocationDTO> currentLocationDTOsList = new ArrayList<>();
+		List<User> usersList = getAllUsers();
+		for(User user: usersList){
+			CurrentLocationDTO currentLocationDTO = new CurrentLocationDTO(user.getUserId(),user.getLastVisitedLocation().location);
+			currentLocationDTOsList.add(currentLocationDTO);
+		}
+		return currentLocationDTOsList;
 	}
 }
