@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserPreferences.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TourGuide</a> &gt; <a href="index.source.html" class="el_package">tourGuide.user</a> &gt; <span class="el_source">UserPreferences.java</span></div><h1>UserPreferences.java</h1><pre class="source lang-java linenums">package tourGuide.user;
+
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
+
+import org.javamoney.moneta.Money;
+
+
+public class UserPreferences {
+	
+<span class="fc" id="L11">	private int attractionProximity = Integer.MAX_VALUE;</span>
+<span class="fc" id="L12">	private CurrencyUnit currency = Monetary.getCurrency(&quot;USD&quot;);</span>
+<span class="fc" id="L13">	private Money lowerPricePoint = Money.of(0, currency);</span>
+<span class="fc" id="L14">	private Money highPricePoint = Money.of(Integer.MAX_VALUE, currency);</span>
+<span class="fc" id="L15">	private int tripDuration = 1;</span>
+<span class="fc" id="L16">	private int ticketQuantity = 1;</span>
+<span class="fc" id="L17">	private int numberOfAdults = 1;</span>
+<span class="fc" id="L18">	private int numberOfChildren = 0;</span>
+	
+<span class="fc" id="L20">	public UserPreferences() {</span>
+<span class="fc" id="L21">	}</span>
+	
+	public void setAttractionProximity(int attractionProximity) {
+<span class="nc" id="L24">		this.attractionProximity = attractionProximity;</span>
+<span class="nc" id="L25">	}</span>
+	
+	public int getAttractionProximity() {
+<span class="nc" id="L28">		return attractionProximity;</span>
+	}
+	
+	public Money getLowerPricePoint() {
+<span class="fc" id="L32">		return lowerPricePoint;</span>
+	}
+
+	public void setLowerPricePoint(Money lowerPricePoint) {
+<span class="nc" id="L36">		this.lowerPricePoint = lowerPricePoint;</span>
+<span class="nc" id="L37">	}</span>
+
+	public Money getHighPricePoint() {
+<span class="fc" id="L40">		return highPricePoint;</span>
+	}
+
+	public void setHighPricePoint(Money highPricePoint) {
+<span class="nc" id="L44">		this.highPricePoint = highPricePoint;</span>
+<span class="nc" id="L45">	}</span>
+	
+	public int getTripDuration() {
+<span class="fc" id="L48">		return tripDuration;</span>
+	}
+
+	public void setTripDuration(int tripDuration) {
+<span class="nc" id="L52">		this.tripDuration = tripDuration;</span>
+<span class="nc" id="L53">	}</span>
+
+	public int getTicketQuantity() {
+<span class="nc" id="L56">		return ticketQuantity;</span>
+	}
+
+	public void setTicketQuantity(int ticketQuantity) {
+<span class="nc" id="L60">		this.ticketQuantity = ticketQuantity;</span>
+<span class="nc" id="L61">	}</span>
+	
+	public int getNumberOfAdults() {
+<span class="fc" id="L64">		return numberOfAdults;</span>
+	}
+
+	public void setNumberOfAdults(int numberOfAdults) {
+<span class="nc" id="L68">		this.numberOfAdults = numberOfAdults;</span>
+<span class="nc" id="L69">	}</span>
+
+	public int getNumberOfChildren() {
+<span class="fc" id="L72">		return numberOfChildren;</span>
+	}
+
+	public void setNumberOfChildren(int numberOfChildren) {
+<span class="nc" id="L76">		this.numberOfChildren = numberOfChildren;</span>
+<span class="nc" id="L77">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

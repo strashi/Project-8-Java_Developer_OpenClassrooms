@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TourGuide</a> &gt; <a href="index.source.html" class="el_package">tourGuide.user</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package tourGuide.user;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import gpsUtil.location.VisitedLocation;
+import tripPricer.Provider;
+
+public class User {
+	private final UUID userId;
+	private final String userName;
+	private String phoneNumber;
+	private String emailAddress;
+	private Date latestLocationTimestamp;
+<span class="fc" id="L17">	private List&lt;VisitedLocation&gt; visitedLocations = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L18">	private List&lt;UserReward&gt; userRewards = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">	private UserPreferences userPreferences = new UserPreferences();</span>
+<span class="fc" id="L20">	private List&lt;Provider&gt; tripDeals = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L22">	public User(UUID userId, String userName, String phoneNumber, String emailAddress) {</span>
+<span class="fc" id="L23">		this.userId = userId;</span>
+<span class="fc" id="L24">		this.userName = userName;</span>
+<span class="fc" id="L25">		this.phoneNumber = phoneNumber;</span>
+<span class="fc" id="L26">		this.emailAddress = emailAddress;</span>
+<span class="fc" id="L27">	}</span>
+	
+	public UUID getUserId() {
+<span class="fc" id="L30">		return userId;</span>
+	}
+	
+	public String getUserName() {
+<span class="fc" id="L34">		return userName;</span>
+	}
+	
+	public void setPhoneNumber(String phoneNumber) {
+<span class="nc" id="L38">		this.phoneNumber = phoneNumber;</span>
+<span class="nc" id="L39">	}</span>
+	
+	public String getPhoneNumber() {
+<span class="nc" id="L42">		return phoneNumber;</span>
+	}
+
+	public void setEmailAddress(String emailAddress) {
+<span class="nc" id="L46">		this.emailAddress = emailAddress;</span>
+<span class="nc" id="L47">	}</span>
+	
+	public String getEmailAddress() {
+<span class="nc" id="L50">		return emailAddress;</span>
+	}
+	
+	public void setLatestLocationTimestamp(Date latestLocationTimestamp) {
+<span class="nc" id="L54">		this.latestLocationTimestamp = latestLocationTimestamp;</span>
+<span class="nc" id="L55">	}</span>
+	
+	public Date getLatestLocationTimestamp() {
+<span class="nc" id="L58">		return latestLocationTimestamp;</span>
+	}
+	
+	public void addToVisitedLocations(VisitedLocation visitedLocation) {
+<span class="fc" id="L62">		visitedLocations.add(visitedLocation);</span>
+<span class="fc" id="L63">	}</span>
+	
+	public List&lt;VisitedLocation&gt; getVisitedLocations() {
+<span class="fc" id="L66">		return visitedLocations;</span>
+	}
+	
+	public void clearVisitedLocations() {
+<span class="nc" id="L70">		visitedLocations.clear();</span>
+<span class="nc" id="L71">	}</span>
+	
+	public void addUserReward(UserReward userReward) {
+		/*if(userRewards.stream().filter(r -&gt; !r.attraction.attractionName.equals(userReward.attraction.attractionName)).count() == 0) {
+			userRewards.add(userReward);
+		}*/
+<span class="fc bfc" id="L77" title="All 2 branches covered.">		for (UserReward existingReward : userRewards) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">			if (existingReward.attraction.attractionName.equals(userReward.attraction.attractionName)) {</span>
+<span class="fc" id="L79">				return; // already exists</span>
+			}
+<span class="fc" id="L81">		}</span>
+<span class="fc" id="L82">		userRewards.add(userReward);</span>
+<span class="fc" id="L83">	}</span>
+	
+	public List&lt;UserReward&gt; getUserRewards() {
+<span class="fc" id="L86">		return userRewards;</span>
+	}
+	
+	public UserPreferences getUserPreferences() {
+<span class="fc" id="L90">		return userPreferences;</span>
+	}
+	
+	public void setUserPreferences(UserPreferences userPreferences) {
+<span class="nc" id="L94">		this.userPreferences = userPreferences;</span>
+<span class="nc" id="L95">	}</span>
+
+	public VisitedLocation getLastVisitedLocation() {
+<span class="fc" id="L98">		return visitedLocations.get(visitedLocations.size() - 1);</span>
+	}
+	
+	public void setTripDeals(List&lt;Provider&gt; tripDeals) {
+<span class="fc" id="L102">		this.tripDeals = tripDeals;</span>
+<span class="fc" id="L103">	}</span>
+	
+	public List&lt;Provider&gt; getTripDeals() {
+<span class="nc" id="L106">		return tripDeals;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

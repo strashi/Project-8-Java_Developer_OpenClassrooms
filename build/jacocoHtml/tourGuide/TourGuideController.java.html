@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TourGuideController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TourGuide</a> &gt; <a href="index.source.html" class="el_package">tourGuide</a> &gt; <span class="el_source">TourGuideController.java</span></div><h1>TourGuideController.java</h1><pre class="source lang-java linenums">package tourGuide;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.jsoniter.output.JsonStream;
+
+import gpsUtil.location.VisitedLocation;
+import tourGuide.dto.CurrentLocationDTO;
+import tourGuide.service.TourGuideService;
+import tourGuide.user.User;
+import tourGuide.user.UserReward;
+import tripPricer.Provider;
+
+@RestController
+<span class="nc" id="L20">public class TourGuideController {</span>
+
+	@Autowired
+	TourGuideService tourGuideService;
+	
+    @RequestMapping(&quot;/&quot;)
+    public String index() {
+<span class="nc" id="L27">        return &quot;Greetings from TourGuide!&quot;;</span>
+    }
+    
+    @RequestMapping(&quot;/getLocation&quot;) 
+    public String getLocation(@RequestParam String userName) {
+<span class="nc" id="L32">    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));</span>
+<span class="nc" id="L33">		return JsonStream.serialize(visitedLocation.location);</span>
+    }
+    
+    //  TODO: Change this method to no longer return a List of Attractions.
+ 	//  Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
+ 	//  Return a new JSON object that contains:
+    	// Name of Tourist attraction, 
+        // Tourist attractions lat/long, 
+        // The user's location lat/long, 
+        // The distance in miles between the user's location and each of the attractions.
+        // The reward points for visiting each Attraction.
+        //    Note: Attraction reward points can be gathered from RewardsCentral
+    @RequestMapping(&quot;/getNearbyAttractions&quot;) 
+    public String getNearbyAttractions(@RequestParam String userName) {
+<span class="nc" id="L47">    	return JsonStream.serialize(tourGuideService.getNearByAttractions(userName));</span>
+    }
+    
+    @RequestMapping(&quot;/getRewards&quot;) 
+    public String getRewards(@RequestParam String userName) {
+    	//return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
+<span class="nc" id="L53">        List&lt;UserReward&gt; userRewards = tourGuideService.getUserRewards(getUser(userName));</span>
+<span class="nc" id="L54">        return JsonStream.serialize(userRewards);</span>
+    }
+    
+    @RequestMapping(&quot;/getAllCurrentLocations&quot;)
+    public String getAllCurrentLocations() {
+    	// TODO: Get a list of every user's most recent location as JSON
+    	//- Note: does not use gpsUtil to query for their current location, 
+    	//        but rather gathers the user's current location from their stored location history.
+    	//
+    	// Return object should be the just a JSON mapping of userId to Locations similar to:
+    	//     {
+    	//        &quot;019b04a9-067a-4c76-8817-ee75088c3822&quot;: {&quot;longitude&quot;:-48.188821,&quot;latitude&quot;:74.84371} 
+    	//        ...
+    	//     }
+<span class="nc" id="L68">    	List&lt;CurrentLocationDTO&gt; currentLocations = tourGuideService.getCurrentLocations();</span>
+<span class="nc" id="L69">    	return JsonStream.serialize(currentLocations);</span>
+    }
+    
+    @RequestMapping(&quot;/getTripDeals&quot;)
+    public String getTripDeals(@RequestParam String userName) {
+<span class="nc" id="L74">    	List&lt;Provider&gt; providers = tourGuideService.getTripDeals(getUser(userName));</span>
+<span class="nc" id="L75">    	return JsonStream.serialize(providers);</span>
+    }
+    
+    private User getUser(String userName) {
+<span class="nc" id="L79">    	return tourGuideService.getUser(userName);</span>
+    }
+
+    //#################################################################
+
+    @RequestMapping(&quot;/veuxvoir&quot;)
+    public String veuxvoir(@RequestParam String userName){
+<span class="nc" id="L86">        List&lt;VisitedLocation&gt; visitedLocations = tourGuideService.getVisitedLocation(userName);</span>
+<span class="nc" id="L87">        return JsonStream.serialize(visitedLocations);</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
