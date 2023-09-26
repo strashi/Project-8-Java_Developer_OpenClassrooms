@@ -52,7 +52,6 @@ public class TestRewardsService {
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
 	}
 	
-	//@Ignore // Needs fixed - can throw ConcurrentModificationException
 	@Test
 	public void nearAllAttractions() {
 		GpsUtil gpsUtil = new GpsUtil();
@@ -64,9 +63,9 @@ public class TestRewardsService {
 		
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
-		//tourGuideService.tracker.stopTracking();
+
 		tourGuideService.stopTrackingUsersAndCompleteTasks();
-		System.out.println(userRewards.toString());
+
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
 	}
 	

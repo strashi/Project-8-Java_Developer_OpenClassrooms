@@ -31,7 +31,8 @@ public class TourGuideController {
     @RequestMapping("/getLocation") 
     public String getLocation(@RequestParam String userName) {
     	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(visitedLocation.location);
+		//return JsonStream.serialize(visitedLocation.location);
+        return JsonStream.serialize(visitedLocation);
     }
 
     @RequestMapping("/getNearbyAttractions") 
@@ -69,12 +70,7 @@ public class TourGuideController {
         return  userPreferences;
 
     }
-    /* @RequestMapping("/getUserPreferences")
-       public String getUserPreferences(@RequestParam String userName){
-           UserPreferences userPreferences = tourGuideService.getUserPreferences(userName);
-           return JsonStream.serialize("nombre adultes:" + userPreferences.getNumberOfAdults());
 
-       }*/
     @RequestMapping(value = "/setUserPreferences")
     public String setUserPreferences(@RequestParam String userName,
                                      @RequestParam int adults,

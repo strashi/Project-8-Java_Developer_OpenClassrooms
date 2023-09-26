@@ -35,7 +35,6 @@ public class TourGuideService {
 	private final RewardsService rewardsService;
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
-
 	public final ExecutorService executorService;
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
@@ -56,7 +55,6 @@ public class TourGuideService {
 	
 	public List<UserReward> getUserRewards(User user) {
 		rewardsService.calculateRewards(user);
-		//trackUserLocation(user);
 		return user.getUserRewards();
 	}
 	
@@ -73,7 +71,6 @@ public class TourGuideService {
 	
 	public List<User> getAllUsers() {
 		return internalUserMap.values().stream().collect(Collectors.toList());
-		//return new ArrayList<>(internalUserMap.values());
 	}
 	
 	public void addUser(User user) {
@@ -110,7 +107,6 @@ public class TourGuideService {
 
 	public List<NearByAttractionDTO> getNearByAttractions(String userName) {
 
-		//List<NearByAttractionDTO> nearbyAttractions = new ArrayList<>();
 		Set<NearByAttractionDTO> nearbyAttractions = new TreeSet<>();
 		Location userLocation = getUserLocation(getUser(userName)).location;
 
@@ -175,9 +171,8 @@ public class TourGuideService {
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			user.setUserPreferences(new UserPreferences());
 			generateUserLocationHistory(user);
-
-			//generateUserAttractionLocationHistory(user);
-			//rewardsService.calculateRewards(user);
+			generateUserAttractionLocationHistory(user);
+			rewardsService.calculateRewards(user);
 			internalUserMap.put(userName, user);
 
 		});
@@ -211,8 +206,6 @@ public class TourGuideService {
 
 	private Attraction generateRandomAttraction(){
 		List<Attraction> attractionList = gpsUtil.getAttractions();
-		/*int max = 25;
-		int intAttraction = (int)(Math.random()*(max+1));*/
 		int leftLimit = 0;
 		int rightLimit = 25;
 		int intAttraction =  (int)(new Random().nextDouble() * (25+1));
@@ -223,10 +216,6 @@ public class TourGuideService {
 			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), new Location((attraction.latitude), (attraction.longitude)), getRandomTime()));
 
 
-	}
-	public List<VisitedLocation> getVisitedLocation(String userName) {
-		User user = getUser(userName);
-		return user.getVisitedLocations();
 	}
 
 	public List<CurrentLocationDTO> getCurrentLocations() {

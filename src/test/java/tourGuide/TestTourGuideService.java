@@ -33,8 +33,8 @@ public class TestTourGuideService {
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
-		//VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
+
+		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 		tourGuideService.tracker.stopTracking();
 		assertTrue(visitedLocation.userId.equals(user.getUserId()));
 
@@ -98,7 +98,6 @@ public class TestTourGuideService {
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
 	
-	//@Ignore // Not yet implemented
 	@Test
 	public void getNearbyAttractions() throws Exception{
 		GpsUtil gpsUtil = new GpsUtil();
@@ -114,8 +113,7 @@ public class TestTourGuideService {
 		List<NearByAttractionDTO> attractions = tourGuideService.getNearByAttractions(user.getUserName());
 		
 		tourGuideService.tracker.stopTracking();
-		//tourGuideService.stopTrackingUsersAndCompleteTasks();
-		
+
 		assertEquals(5, attractions.size());
 	}
 	@Test

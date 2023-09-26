@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="tourGuide.TestRewardsService" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-09-25T07:01:13" hostname="strashi" time="0.96">
+<testsuite name="tourGuide.TestRewardsService" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-09-26T11:16:17" hostname="strashi" time="2.265">
   <properties/>
-  <testcase name="userGetRewards" classname="tourGuide.TestRewardsService" time="0.96"/>
-  <system-out><![CDATA[09:01:14.035 [Test worker] INFO tourGuide.service.TourGuideService - TestMode enabled
-09:01:14.043 [Test worker] DEBUG tourGuide.service.TourGuideService - Initializing users
-09:01:14.049 [Test worker] DEBUG tourGuide.service.TourGuideService - Created 0 internal test users.
-09:01:14.049 [Test worker] DEBUG tourGuide.service.TourGuideService - Finished initializing users
-09:01:14.063 [pool-1-thread-1] DEBUG tourGuide.tracker.Tracker - Begin Tracker. Tracking 0 users.
-09:01:14.065 [pool-1-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker Time Elapsed: 0 seconds.
-09:01:14.066 [pool-1-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker sleeping
-09:01:14.186 [Test worker] DEBUG tourGuide.service.TourGuideService - Tracker stopped. Completing tasks . . .
+  <testcase name="nearAllAttractions" classname="tourGuide.TestRewardsService" time="2.265"/>
+  <system-out><![CDATA[13:16:18.050 [Test worker] INFO tourGuide.service.TourGuideService - TestMode enabled
+13:16:18.061 [Test worker] DEBUG tourGuide.service.TourGuideService - Initializing users
+13:16:18.161 [Test worker] DEBUG tourGuide.service.TourGuideService - Created 1 internal test users.
+13:16:18.161 [Test worker] DEBUG tourGuide.service.TourGuideService - Finished initializing users
+13:16:18.169 [pool-1-thread-1] DEBUG tourGuide.tracker.Tracker - Begin Tracker. Tracking 1 users.
+13:16:18.240 [pool-1-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker Time Elapsed: 0 seconds.
+13:16:18.240 [pool-1-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker sleeping
+13:16:20.166 [Test worker] DEBUG tourGuide.service.TourGuideService - Tracker stopped. Completing tasks . . .
 ]]></system-out>
-  <system-err><![CDATA[Sep 25, 2023 9:01:14 AM org.javamoney.moneta.DefaultMonetaryContextFactory createMonetaryContextNonNullConfig
+  <system-err><![CDATA[Sep 26, 2023 1:16:18 PM org.javamoney.moneta.DefaultMonetaryContextFactory createMonetaryContextNonNullConfig
 INFO: Using custom MathContext: precision=256, roundingMode=HALF_EVEN
 ]]></system-err>
 </testsuite>
