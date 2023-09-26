@@ -172,7 +172,7 @@ public class TourGuideService {
 			user.setUserPreferences(new UserPreferences());
 			generateUserLocationHistory(user);
 			//generateUserAttractionLocationHistory(user);
-			rewardsService.calculateRewards(user);
+			//rewardsService.calculateRewards(user);
 			internalUserMap.put(userName, user);
 
 		});
