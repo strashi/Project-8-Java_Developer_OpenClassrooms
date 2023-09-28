@@ -171,8 +171,11 @@ public class TourGuideService {
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			user.setUserPreferences(new UserPreferences());
 			generateUserLocationHistory(user);
-			//generateUserAttractionLocationHistory(user);
-			//rewardsService.calculateRewards(user);
+			//to test if getRewards works
+			if(i == 0){
+				generateUserAttractionLocationHistory(user);
+				rewardsService.calculateRewards(user);
+			}
 			internalUserMap.put(userName, user);
 
 		});

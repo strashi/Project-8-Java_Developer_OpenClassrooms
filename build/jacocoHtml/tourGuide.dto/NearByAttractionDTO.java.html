@@ -21,23 +21,23 @@ public class NearByAttractionDTO implements Comparable&lt;NearByAttractionDTO&gt
     public double distanceInMiles;
     public int rewardPoints;
 
-<span class="nc" id="L24">    public NearByAttractionDTO(Attraction attraction, Location userLocation, double distanceInMiles, int rewardPoints) {</span>
-<span class="nc" id="L25">        this.attractionName = attraction.attractionName;</span>
-<span class="nc" id="L26">        this.attractionLocation = new Location(attraction.latitude, attraction.longitude);</span>
-<span class="nc" id="L27">        this.userLocation = userLocation;</span>
-<span class="nc" id="L28">        this.distanceInMiles = distanceInMiles;</span>
-<span class="nc" id="L29">        this.rewardPoints = rewardPoints;</span>
-<span class="nc" id="L30">    }</span>
+<span class="fc" id="L24">    public NearByAttractionDTO(Attraction attraction, Location userLocation, double distanceInMiles, int rewardPoints) {</span>
+<span class="fc" id="L25">        this.attractionName = attraction.attractionName;</span>
+<span class="fc" id="L26">        this.attractionLocation = new Location(attraction.latitude, attraction.longitude);</span>
+<span class="fc" id="L27">        this.userLocation = userLocation;</span>
+<span class="fc" id="L28">        this.distanceInMiles = distanceInMiles;</span>
+<span class="fc" id="L29">        this.rewardPoints = rewardPoints;</span>
+<span class="fc" id="L30">    }</span>
     public int compareTo(NearByAttractionDTO nearByAttractionDTO) {
 
-<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (distanceInMiles &gt; nearByAttractionDTO.distanceInMiles) {</span>
-<span class="nc" id="L34">            return 1;</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (distanceInMiles &gt; nearByAttractionDTO.distanceInMiles) {</span>
+<span class="fc" id="L34">            return 1;</span>
         }
-<span class="nc bnc" id="L36" title="All 2 branches missed.">        else if (distanceInMiles &lt; nearByAttractionDTO.distanceInMiles) {</span>
-<span class="nc" id="L37">            return -1;</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        else if (distanceInMiles &lt; nearByAttractionDTO.distanceInMiles) {</span>
+<span class="fc" id="L37">            return -1;</span>
         }
         else {
-<span class="nc" id="L40">            return 0;</span>
+<span class="fc" id="L40">            return 0;</span>
         }
 
     }

@@ -31,8 +31,8 @@ import tripPricer.Provider;
     @RequestMapping(&quot;/getLocation&quot;) 
     public String getLocation(@RequestParam String userName) {
 <span class="nc" id="L33">    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));</span>
-		//return JsonStream.serialize(visitedLocation.location);
-<span class="nc" id="L35">        return JsonStream.serialize(visitedLocation);</span>
+<span class="nc" id="L34">		return JsonStream.serialize(visitedLocation.location);</span>
+        //return JsonStream.serialize(visitedLocation);
     }
 
     @RequestMapping(&quot;/getNearbyAttractions&quot;) 
@@ -70,12 +70,7 @@ import tripPricer.Provider;
 <span class="nc" id="L70">        return  userPreferences;</span>
 
     }
-    /* @RequestMapping(&quot;/getUserPreferences&quot;)
-       public String getUserPreferences(@RequestParam String userName){
-           UserPreferences userPreferences = tourGuideService.getUserPreferences(userName);
-           return JsonStream.serialize(&quot;nombre adultes:&quot; + userPreferences.getNumberOfAdults());
 
-       }*/
     @RequestMapping(value = &quot;/setUserPreferences&quot;)
     public String setUserPreferences(@RequestParam String userName,
                                      @RequestParam int adults,
@@ -83,8 +78,8 @@ import tripPricer.Provider;
                                      @RequestParam int nights,
                                      @RequestParam double minPrice,
                                      @RequestParam double maxPrice) {
-<span class="nc" id="L86">        tourGuideService.setUserPreferences(getUser(userName), adults, children, nights, minPrice, maxPrice);</span>
-<span class="nc" id="L87">        return JsonStream.serialize(&quot;Preferences updated&quot; );</span>
+<span class="nc" id="L81">        tourGuideService.setUserPreferences(getUser(userName), adults, children, nights, minPrice, maxPrice);</span>
+<span class="nc" id="L82">        return JsonStream.serialize(&quot;Preferences updated&quot; );</span>
     }
 
 }

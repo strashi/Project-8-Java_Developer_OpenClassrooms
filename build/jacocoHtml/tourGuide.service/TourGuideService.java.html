@@ -171,78 +171,81 @@ public class TourGuideService {
 <span class="fc" id="L171">			User user = new User(UUID.randomUUID(), userName, phone, email);</span>
 <span class="fc" id="L172">			user.setUserPreferences(new UserPreferences());</span>
 <span class="fc" id="L173">			generateUserLocationHistory(user);</span>
-			//generateUserAttractionLocationHistory(user);
-			//rewardsService.calculateRewards(user);
-<span class="fc" id="L176">			internalUserMap.put(userName, user);</span>
+			//to test if getRewards works
+<span class="fc bfc" id="L175" title="All 2 branches covered.">			if(i == 0){</span>
+<span class="fc" id="L176">				generateUserAttractionLocationHistory(user);</span>
+<span class="fc" id="L177">				rewardsService.calculateRewards(user);</span>
+			}
+<span class="fc" id="L179">			internalUserMap.put(userName, user);</span>
 
-<span class="fc" id="L178">		});</span>
-<span class="fc" id="L179">		logger.debug(&quot;Created &quot; + InternalTestHelper.getInternalUserNumber() + &quot; internal test users.&quot;);</span>
-<span class="fc" id="L180">	}</span>
+<span class="fc" id="L181">		});</span>
+<span class="fc" id="L182">		logger.debug(&quot;Created &quot; + InternalTestHelper.getInternalUserNumber() + &quot; internal test users.&quot;);</span>
+<span class="fc" id="L183">	}</span>
 
 	private void generateUserLocationHistory(User user) {
-<span class="fc" id="L183">		IntStream.range(0, 3).forEach(i-&gt; {</span>
-<span class="fc" id="L184">			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));</span>
-<span class="fc" id="L185">		});</span>
-<span class="fc" id="L186">	}</span>
+<span class="fc" id="L186">		IntStream.range(0, 3).forEach(i-&gt; {</span>
+<span class="fc" id="L187">			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));</span>
+<span class="fc" id="L188">		});</span>
+<span class="fc" id="L189">	}</span>
 	
 	private double generateRandomLongitude() {
-<span class="fc" id="L189">		double leftLimit = -180;</span>
-<span class="fc" id="L190">	    double rightLimit = 180;</span>
-<span class="fc" id="L191">	    return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);</span>
+<span class="fc" id="L192">		double leftLimit = -180;</span>
+<span class="fc" id="L193">	    double rightLimit = 180;</span>
+<span class="fc" id="L194">	    return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);</span>
 	}
 	
 	private double generateRandomLatitude() {
-<span class="fc" id="L195">		double leftLimit = -85.05112878;</span>
-<span class="fc" id="L196">	    double rightLimit = 85.05112878;</span>
-<span class="fc" id="L197">	    return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);</span>
+<span class="fc" id="L198">		double leftLimit = -85.05112878;</span>
+<span class="fc" id="L199">	    double rightLimit = 85.05112878;</span>
+<span class="fc" id="L200">	    return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);</span>
 	}
 	
 	private Date getRandomTime() {
-<span class="fc" id="L201">		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));</span>
-<span class="fc" id="L202">	    return Date.from(localDateTime.toInstant(ZoneOffset.UTC));</span>
+<span class="fc" id="L204">		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));</span>
+<span class="fc" id="L205">	    return Date.from(localDateTime.toInstant(ZoneOffset.UTC));</span>
 	}
 
 	//#################################################################
 
 	private Attraction generateRandomAttraction(){
-<span class="nc" id="L208">		List&lt;Attraction&gt; attractionList = gpsUtil.getAttractions();</span>
-<span class="nc" id="L209">		int leftLimit = 0;</span>
-<span class="nc" id="L210">		int rightLimit = 25;</span>
-<span class="nc" id="L211">		int intAttraction =  (int)(new Random().nextDouble() * (25+1));</span>
-<span class="nc" id="L212">		return attractionList.get(intAttraction);</span>
+<span class="fc" id="L211">		List&lt;Attraction&gt; attractionList = gpsUtil.getAttractions();</span>
+<span class="fc" id="L212">		int leftLimit = 0;</span>
+<span class="fc" id="L213">		int rightLimit = 25;</span>
+<span class="fc" id="L214">		int intAttraction =  (int)(new Random().nextDouble() * (25+1));</span>
+<span class="fc" id="L215">		return attractionList.get(intAttraction);</span>
 	}
 	private void generateUserAttractionLocationHistory(User user) {
-<span class="nc" id="L215">			Attraction attraction = generateRandomAttraction();</span>
-<span class="nc" id="L216">			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), new Location((attraction.latitude), (attraction.longitude)), getRandomTime()));</span>
+<span class="fc" id="L218">			Attraction attraction = generateRandomAttraction();</span>
+<span class="fc" id="L219">			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), new Location((attraction.latitude), (attraction.longitude)), getRandomTime()));</span>
 
 
-<span class="nc" id="L219">	}</span>
+<span class="fc" id="L222">	}</span>
 
 	public List&lt;CurrentLocationDTO&gt; getCurrentLocations() {
-<span class="nc" id="L222">		List&lt;CurrentLocationDTO&gt; currentLocationDTOsList = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L223">		List&lt;User&gt; usersList = getAllUsers();</span>
-<span class="nc bnc" id="L224" title="All 2 branches missed.">		for(User user: usersList){</span>
-<span class="nc" id="L225">			CurrentLocationDTO currentLocationDTO = new CurrentLocationDTO(user.getUserId(),user.getLastVisitedLocation().location);</span>
-<span class="nc" id="L226">			currentLocationDTOsList.add(currentLocationDTO);</span>
-<span class="nc" id="L227">		}</span>
-<span class="nc" id="L228">		return currentLocationDTOsList;</span>
+<span class="nc" id="L225">		List&lt;CurrentLocationDTO&gt; currentLocationDTOsList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L226">		List&lt;User&gt; usersList = getAllUsers();</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">		for(User user: usersList){</span>
+<span class="nc" id="L228">			CurrentLocationDTO currentLocationDTO = new CurrentLocationDTO(user.getUserId(),user.getLastVisitedLocation().location);</span>
+<span class="nc" id="L229">			currentLocationDTOsList.add(currentLocationDTO);</span>
+<span class="nc" id="L230">		}</span>
+<span class="nc" id="L231">		return currentLocationDTOsList;</span>
 	}
 
 	public UserPreferences getUserPreferences(String userName) {
-<span class="nc" id="L232">		User user = getUser(userName);</span>
-<span class="nc" id="L233">		UserPreferences userPreferences = user.getUserPreferences();</span>
+<span class="nc" id="L235">		User user = getUser(userName);</span>
+<span class="nc" id="L236">		UserPreferences userPreferences = user.getUserPreferences();</span>
 
-<span class="nc" id="L235">		return userPreferences;</span>
+<span class="nc" id="L238">		return userPreferences;</span>
 	}
 
 	public void setUserPreferences(User user, int adults, int children, int nightsStay, double minPrice, double maxPrice) {
-<span class="nc" id="L239">		UserPreferences preferences = user.getUserPreferences();</span>
-<span class="nc" id="L240">		preferences.setNumberOfAdults(adults);</span>
-<span class="nc" id="L241">		preferences.setNumberOfChildren(children);</span>
-<span class="nc" id="L242">		preferences.setTripDuration(nightsStay);</span>
-<span class="nc" id="L243">		preferences.setLowerPricePoint(Money.of(minPrice, &quot;USD&quot;));</span>
-<span class="nc" id="L244">		preferences.setHighPricePoint(Money.of(maxPrice, &quot;USD&quot;));</span>
-<span class="nc" id="L245">		user.setUserPreferences(preferences);</span>
-<span class="nc" id="L246">	}</span>
+<span class="nc" id="L242">		UserPreferences preferences = user.getUserPreferences();</span>
+<span class="nc" id="L243">		preferences.setNumberOfAdults(adults);</span>
+<span class="nc" id="L244">		preferences.setNumberOfChildren(children);</span>
+<span class="nc" id="L245">		preferences.setTripDuration(nightsStay);</span>
+<span class="nc" id="L246">		preferences.setLowerPricePoint(Money.of(minPrice, &quot;USD&quot;));</span>
+<span class="nc" id="L247">		preferences.setHighPricePoint(Money.of(maxPrice, &quot;USD&quot;));</span>
+<span class="nc" id="L248">		user.setUserPreferences(preferences);</span>
+<span class="nc" id="L249">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
