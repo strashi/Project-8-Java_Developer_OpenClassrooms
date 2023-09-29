@@ -108,7 +108,6 @@ public class TourGuideService {
 	public List<NearByAttractionDTO> getNearByAttractions(String userName) {
 
 		Set<NearByAttractionDTO> nearbyAttractions = new TreeSet<>();
-		//Location userLocation = getUserLocation(getUser(userName)).location;
 		Location userLocation = getUser(userName).getLastVisitedLocation().location;
 
 		for(Attraction attraction : gpsUtil.getAttractions()) {
