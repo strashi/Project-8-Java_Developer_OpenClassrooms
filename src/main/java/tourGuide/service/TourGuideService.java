@@ -108,7 +108,8 @@ public class TourGuideService {
 	public List<NearByAttractionDTO> getNearByAttractions(String userName) {
 
 		Set<NearByAttractionDTO> nearbyAttractions = new TreeSet<>();
-		Location userLocation = getUserLocation(getUser(userName)).location;
+		//Location userLocation = getUserLocation(getUser(userName)).location;
+		Location userLocation = getUser(userName).getLastVisitedLocation().location;
 
 		for(Attraction attraction : gpsUtil.getAttractions()) {
 			Location attractionLocation = new Location(attraction.latitude,attraction.longitude);
@@ -225,7 +226,8 @@ public class TourGuideService {
 		List<CurrentLocationDTO> currentLocationDTOsList = new ArrayList<>();
 		List<User> usersList = getAllUsers();
 		for(User user: usersList){
-			CurrentLocationDTO currentLocationDTO = new CurrentLocationDTO(user.getUserId(),user.getLastVisitedLocation().location);
+			Location location = getUserLocation(user).location;
+			CurrentLocationDTO currentLocationDTO = new CurrentLocationDTO(user.getUserId(),location);
 			currentLocationDTOsList.add(currentLocationDTO);
 		}
 		return currentLocationDTOsList;

@@ -54,8 +54,8 @@ public class TourGuideService {
 <span class="fc" id="L54">	}</span>
 	
 	public List&lt;UserReward&gt; getUserRewards(User user) {
-<span class="nc" id="L57">		rewardsService.calculateRewards(user);</span>
-<span class="nc" id="L58">		return user.getUserRewards();</span>
+<span class="fc" id="L57">		rewardsService.calculateRewards(user);</span>
+<span class="fc" id="L58">		return user.getUserRewards();</span>
 	}
 	
 	public VisitedLocation getUserLocation(User user) {
@@ -141,19 +141,19 @@ public class TourGuideService {
 	 *****************************************************************/
 
 	public void stopTrackingUsersAndCompleteTasks() {
-<span class="nc" id="L144">		tracker.stopTracking();</span>
-<span class="nc" id="L145">		logger.debug(&quot;Tracker stopped. Completing tasks . . .&quot;);</span>
-<span class="nc" id="L146">		executorService.shutdown();</span>
-<span class="nc" id="L147">		int minutes = 0;</span>
+<span class="fc" id="L144">		tracker.stopTracking();</span>
+<span class="fc" id="L145">		logger.debug(&quot;Tracker stopped. Completing tasks . . .&quot;);</span>
+<span class="fc" id="L146">		executorService.shutdown();</span>
+<span class="fc" id="L147">		int minutes = 0;</span>
 		while (true) {
 			try {
-<span class="nc bnc" id="L150" title="All 2 branches missed.">				if (executorService.awaitTermination(1, TimeUnit.MINUTES)) break;</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">				if (executorService.awaitTermination(1, TimeUnit.MINUTES)) break;</span>
 <span class="nc" id="L151">			} catch (InterruptedException e) {</span>
 <span class="nc" id="L152">				throw new RuntimeException(e);</span>
 <span class="nc" id="L153">			}</span>
 <span class="nc" id="L154">			logger.debug(&quot;Completing tasks . . . (elapsed {} minutes)&quot;, ++minutes);</span>
 		}
-<span class="nc" id="L156">	}</span>
+<span class="fc" id="L156">	}</span>
 
 	/**********************************************************************************
 	 * 
