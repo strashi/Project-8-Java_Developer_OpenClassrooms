@@ -18,11 +18,7 @@ Skills tested :
 # Trip Master
 
 Project realized with :
-- SpringBoot 2.7.14
+- SpringBoot 2.1.6
 - Java 8
-- MongoDB 7.0.2
-- MySQL 8.0.35
-- Docker and Docker-compose
-- Bootstrap v4.1.2
-
+- Gitlab pipeline CI (see link https://gitlab.com/strashi/TourGuide)
 Mediscreen manages data from SQL and NoSql databases and then puts into practice an algorythm to establish a medical diagnosis
