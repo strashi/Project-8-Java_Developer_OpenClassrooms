@@ -21,4 +21,5 @@ Project realized with :
 - SpringBoot 2.1.6
 - Java 8
 - Gitlab pipeline CI (see link https://gitlab.com/strashi/TourGuide)
-Mediscreen manages data from SQL and NoSql databases and then puts into practice an algorythm to establish a medical diagnosis
+  
+Trip Master simulates users' geolocations and applies various processes, including suggestions of tourist sites to visit based on their location.
